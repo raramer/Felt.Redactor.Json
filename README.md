@@ -15,10 +15,9 @@ var json = @"{
                ""password": ""P@ssw0rd!""
              }";
 var redactedJson = redactor.Redact(json); 
-
-/*
- * {"username":"jdoe","password":"[REDACTED]"}
- */
+```
+```
+{"username":"jdoe","password":"[REDACTED]"}
 ```
 
 ### Options
@@ -54,9 +53,9 @@ var json = @"{
                ]
              }";
 var redactedJson = redactor.Redact(json);
-/*
- * {"properties":[{"name":"username","value":"jdoe"},{"name":"password","value":"[REDACTED]"}}
- */
+```
+```
+{"properties":[{"name":"username","value":"jdoe"},{"name":"password","value":"[REDACTED]"}}
 ```
 
 * Mask : the value used to mask redacted values.  The default is "[REDACTED]", but you can provide the value you prefer.  e.g. "********"
@@ -73,16 +72,18 @@ var redactedJson = redactor.Redact(json);
     "password": "[REDACTED]"
 }
 ```
-  * Whitespaced : properties are whitespaced without newlines
-```
-{ "username": "jdoe", "password": "[REDACTED]" }
-```
 
 * StringComparison : how to compare values.  The default is OrdinalIgnoreCase.
 
 * ComplexTypeHandling : how to mask complex types.
   * RedactValue (default) : redacts the entire value.
-  * RedactDescendants : redacts each descendant value, preserving the complex type's data structure.
+```
+{"total":19.99,"creditCard":"[REDACTED]"}
+``` 
+  * RedactDescendants : redacts each descendant value, preserving the complex type's structure.
+```
+{"total":19.99,"creditCard":{"type":"[REDACTED]","number":"[REDACTED]","expiration":"[REDACTED]","cvv":"[REDACTED]" } }
+``` 
 
 * OnErrorRedact : how to handle the response when the value does not conform to the structured text type.
   * All (default) : redacts the entire response.
