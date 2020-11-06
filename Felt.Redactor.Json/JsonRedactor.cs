@@ -2,14 +2,12 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Felt.Redactor.Json
 {
     public sealed class JsonRedactor : RedactorBase, IRedact
     {
         private readonly Formatting _formatting = Formatting.None;
-        private readonly Func<string, string> AdjustWhiteSpace = i => i;
 
         public JsonRedactor() : base(new RedactorOptions())
         {
@@ -43,11 +41,6 @@ namespace Felt.Redactor.Json
                     _formatting = Formatting.Indented;
                     break;
 
-                case JsonRedactorFormatting.WhiteSpaced:
-                    _formatting = Formatting.Indented;
-                    AdjustWhiteSpace = i => Regex.Replace(i, @"\s+", " ", RegexOptions.Multiline);
-                    break;
-
                 default:
                     throw new InvalidOperationException("Invalid " + nameof(JsonRedactorFormatting));
             }
@@ -71,7 +64,7 @@ namespace Felt.Redactor.Json
             {
                 var jToken = JToken.Parse(json);
                 RedactJToken(jToken, false, null);
-                redactedJson = AdjustWhiteSpace(jToken.ToString(_formatting));
+                redactedJson = jToken.ToString(_formatting);
                 errorMessage = null;
                 return true;
             }

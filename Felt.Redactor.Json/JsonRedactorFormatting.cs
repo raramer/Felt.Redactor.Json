@@ -4,6 +4,5 @@
     {
         Compressed = 0,
         Indented = 1,
-        WhiteSpaced = 2,
     }
 }
