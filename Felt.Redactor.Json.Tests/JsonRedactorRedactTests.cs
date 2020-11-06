@@ -6,7 +6,7 @@ namespace Felt.Redactor.Json.Tests
 {
     public class JsonRedactorRedactTests
     {
-        private const string BasicJsonExample =
+        public const string BasicJsonExample =
         @"{
             ""a"": ""1"",
             ""b"": 2
@@ -24,7 +24,7 @@ namespace Felt.Redactor.Json.Tests
         /// i: array of arrays
         /// j: null
         /// </summary>
-        private const string ComplexJsonExample =
+        public const string ComplexJsonExample =
         @"{
             ""a"": ""A"",
             ""b"": 2,
@@ -44,6 +44,12 @@ namespace Felt.Redactor.Json.Tests
             ""j"": null
         }";
 
+        public static object[][] FormattingIs_Data =
+        {
+            new object[] { JsonRedactorFormatting.Compressed, "{\"a\":\"[REDACTED]\",\"b\":2}" },
+            new object[] { JsonRedactorFormatting.Indented, $"{{{Environment.NewLine}  \"a\": \"[REDACTED]\",{Environment.NewLine}  \"b\": 2{Environment.NewLine}}}" }
+        };
+
         [Theory]
         [InlineData(ComplexTypeHandling.RedactValue, "{\"a\":\"A\",\"b\":2,\"c\":true,\"d\":\"[REDACTED]\",\"i\":\"[REDACTED]\",\"j\":null}")]
         [InlineData(ComplexTypeHandling.RedactDescendants, "{\"a\":\"A\",\"b\":2,\"c\":true,\"d\":{\"e\":\"[REDACTED]\",\"f\":{\"x\":\"[REDACTED]\"},\"g\":[\"[REDACTED]\",\"[REDACTED]\"],\"h\":[{\"y\":\"[REDACTED]\"},{\"y\":\"[REDACTED]\"}]},\"i\":[[\"[REDACTED]\",\"[REDACTED]\"],[\"[REDACTED]\",\"[REDACTED]\"]],\"j\":null}")]
@@ -61,9 +67,7 @@ namespace Felt.Redactor.Json.Tests
         }
 
         [Theory]
-        [InlineData(JsonRedactorFormatting.Compressed, "{\"a\":\"[REDACTED]\",\"b\":2}")]
-        [InlineData(JsonRedactorFormatting.Indented, "{\r\n  \"a\": \"[REDACTED]\",\r\n  \"b\": 2\r\n}")]
-        [InlineData(JsonRedactorFormatting.WhiteSpaced, "{ \"a\": \"[REDACTED]\", \"b\": 2 }")]
+        [MemberData(nameof(FormattingIs_Data))]
         public void FormattingIs(JsonRedactorFormatting formatting, string expectedResult)
         {
             var redactor = new JsonRedactor(new JsonRedactorOptions
